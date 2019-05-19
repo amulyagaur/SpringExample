@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">-->
+
+<!--we can define default init and destroy methods in <beans/> tag, in that case spring search for
+    those methods in every bean and calls them if their definition is found and otherwise ignores
+    them. It can be done as described below-->
+<!-- <beans default-init-method="myInit" default-destroy-method="cleanUp"> -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="triangle" class="Triangle"/>
+
+    <!--&lt;!&ndash;Make a triangle object with type already instantiated&ndash;&gt;-->
+    <!--&lt;!&ndash;It will use the setter setType(), called setter injection&ndash;&gt;-->
+    <bean id="equilateral_triangle" class="Triangle">
+        <property name="type" value="Equilateral"/>
+    </bean>
+
+    <!--&lt;!&ndash;constructor injection i.e. injecting the values using constructor&ndash;&gt;-->
+
+    <!--&lt;!&ndash;will automatically search for constructor with two arguments&ndash;&gt;-->
+    <!--&lt;!&ndash;the 'type' attribute is needed only if there are overloaded constructors on the-->
+        <!--basis of type of arguments, otherwise, it can be skipped&ndash;&gt;-->
+    <!--&lt;!&ndash;Indexing is also optional&ndash;&gt;-->
+    <bean id="constructor_injected_triangle" class="Triangle">
+        <constructor-arg index="0" type="java.lang.String" value="Equilateral"/>
+        <constructor-arg index="1" type="int" value="20"/>
+    </bean>
+
+    <!--&lt;!&ndash;defining init and destroy methods&ndash;&gt;-->
+    <!--&lt;!&ndash;if default init and destroy methods are defined, then no need of defining them here&ndash;&gt;-->
+    <!--<bean id="callback_triangle" class="Triangle" init-method="myInit" destroy-method="cleanUp">-->
+        <!--<property name="type" value="Scalene"/>-->
+        <!--<property name="height" value="16"/>-->
+    <!--</bean>-->
+
+    <bean id="p1" class="Point">
+        <property name="x" value="0"/>
+        <property name="y" value="0"/>
+    </bean>
+
+    <bean id="p2" class="Point">
+        <property name="x" value="1"/>
+        <property name="y" value="1"/>
+    </bean>
+
+    <bean id="p3" class="Point">
+        <property name="x" value="2"/>
+        <property name="y" value="2"/>
+    </bean>
+
+    <bean id="p4" class="Point">
+        <property name="x" value="3"/>
+        <property name="y" value="3"/>
+    </bean>
+
+    <bean id="square" class="Square" autowire="byName">
+    </bean>
+
+    <bean id="line" class="Line">
+        <property name="points">
+            <list>
+                <ref bean="p1"/>
+                <ref bean="p2"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="parentsquare" class="Square">
+        <property name="p1" ref="p1"/>
+        <property name="p4" ref="p4"/>
+    </bean>
+
+    <bean id="childsquare" class="Square" parent="parentsquare">
+
+        <property name="p2" ref="p2"/>
+        <property name="p3" ref="p3"/>
+    </bean>
+
+</beans>
